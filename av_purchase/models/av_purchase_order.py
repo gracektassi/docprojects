@@ -72,7 +72,7 @@ class PurchaseOrder(models.Model):
 
             if order.state == "draft":
                 order.state = "waiting_for_hod"
-                # Create To-Do for HOD
+                # Create To-Do for HOD 
                 self.env["mail.activity"].create(
                     {
                         "activity_type_id": self.env.ref(
