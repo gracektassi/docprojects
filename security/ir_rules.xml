@@ -1,16 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-        <!-- Rule for HODS to view only trips related to their departments -->
-        <record id="hod_department_related_trip_rule" model="ir.rule">
-            <field name="name">HOD Department Related Trip Rule</field>
-            <field name="model_id" ref="triplog.model_triplog_trip" />
-            <field name="groups" eval="[(4, ref('triplog.hod_group'))]"/>
-            <field name="domain_force">[('department_ids', 'in', user.employee_id.department_id.ids)]</field>
-            <field name="perm_unlink">1</field>
-            <field name="perm_write">1</field>
-            <field name="perm_read">1</field>
-            <field name="perm_create">0</field>
-        </record>
+     
     </data>
 </odoo>
