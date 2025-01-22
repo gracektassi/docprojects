@@ -3,7 +3,7 @@
     "name":"AV Project",
     "summary":"Virunga Alliance  Project",
     "version":"17.0.1.0.0",
-    'description': 'Virunga Alliance Trip log',
+    'description': 'Virunga Alliance',
     'author': 'Virunga Foundation',
     "license":"OPL-1",
     "depends":["base", "project", "purchase","hr" ],
