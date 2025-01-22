@@ -7,7 +7,7 @@
     </record>
 
     <!--    This is the admin group-->
-    <record id="docproject_hod" model="res.groups">
+    <record id="av_purchase_hod" model="res.groups">
         <field name="name">HOD</field>
         <field name="category_id" ref="module_category_inventory_purchase" />
         <!-- implied_ids makes the new group inherit permissions from an existing group -->
@@ -17,7 +17,7 @@
     </record>
 
     <!--  Driver group  -->
-    <record id="docproject_cp" model="res.groups">
+    <record id="av_purchase_cp" model="res.groups">
         <field name="name">CP</field>
         <field name="category_id" ref="module_category_inventory_purchase" />
         <field name="comment">

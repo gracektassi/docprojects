@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+   <!-- Modify the label of the Purchase category -->
+    <record id="module_category_inventory_purchase" model="ir.module.category">
+        <field name="name">AV Project</field>  <!-- New label for the category -->
+    </record>
+
+
+
+</odoo>
