@@ -11,8 +11,6 @@
         <field name="name">HOD</field>
         <field name="category_id" ref="module_category_inventory_purchase" />
         <!-- implied_ids makes the new group inherit permissions from an existing group -->
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
-
         <field name="comment">Approve P.O.</field>
     </record>
 

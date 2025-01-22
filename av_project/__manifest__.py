@@ -14,7 +14,7 @@
         "security/ir.model.access.csv",
         # "security/ir_rules.xml",
         # Views
-        "views/av_project_project_views.xml",
+        "views/av_project_views.xml",
         # Data
         # menu
         "views/av_project_menu.xml",

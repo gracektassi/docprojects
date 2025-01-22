@@ -55,8 +55,13 @@ class PurchaseOrder(models.Model):
                 )
 
     def action_submit(self):
-        for order in self:
 
+        for order in self:
+            # Ensure at least one product is added
+            if not order.order_line:
+                raise ValidationError(
+                    "You must add at least one product to the order before submitting."
+                )
             if order.state not in ["draft", "sent"]:
                 continue
             order.order_line._validate_analytic_distribution()
