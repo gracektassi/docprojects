@@ -12,6 +12,17 @@ class Project(models.Model):
     hod_id = fields.Many2one(
         "hr.employee", string="Head of Department", compute="_compute_hod", store=True
     )
+    state = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("in_progress", "In Progress"),
+            ("stopped", "Stopped"),
+        ],
+        string="Status",
+        default="draft",
+        readonly=True,
+        tracking=True,
+    )
 
     @api.depends("department_id")
     def _compute_hod(self):
@@ -21,13 +32,6 @@ class Project(models.Model):
             else:
                 record.hod_id = False
 
-    @api.model
-    def create(self, vals):
-        if not self.env.user.has_group(
-            "project.group_project_manager"
-        ):  # Only project admins can create projects
-            raise ValidationError("You are not allowed to create a project.")
-        return super(Project, self).create(vals)
 
     @api.constrains("department_id")
     def _check_department_manager(self):
@@ -36,3 +40,29 @@ class Project(models.Model):
                 raise ValidationError(
                     "The department must have a manager to assign the Head of Department."
                 )
+
+    def action_start_project(self):
+        """
+        Action to set the start date to today and mark the project as in progress.
+        """
+
+        for project in self:
+            if project.state == "in_progress":
+                raise ValidationError("The project is already in progress.")
+            if not project.date_start:
+                raise ValidationError("Start date cannot be empty when the project is in progress.")
+
+            project.state = "in_progress"
+
+    def action_stop_project(self):
+        """
+        Action to stop the project. Sets the stop date and updates the state to 'stopped'.
+        """
+        for project in self:
+            if project.state == "stopped":
+                raise ValidationError("The project is already stopped.")
+            if project.state == "draft":
+                raise ValidationError(
+                    "You cannot stop a project that has not been started."
+                )
+            project.state = "stopped"

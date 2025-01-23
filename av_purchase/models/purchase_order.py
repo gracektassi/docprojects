@@ -37,6 +37,17 @@ class PurchaseOrder(models.Model):
         readonly=False,
     )
 
+    @api.constrains("amount")
+    def _check_positive_amount(self):
+        """
+        Ensure the purchase order amount is strictly positive.
+        """
+        for order in self:
+            if order.amount <= 0:
+                raise ValidationError(
+                    "The amount must be strictly positive. Please enter a valid amount."
+                )
+
     @api.depends("create_uid")
     def _compute_department(self):
         """

@@ -22,7 +22,7 @@
                 <xpath expr="//button[@id='bid_confirm']" position="replace">
                     <button name="action_confirm" type="object" string="Confirm" groups="docproject.docproject_hod" class="oe_highlight" invisible="state !='waiting_for_hod'"/>
                 </xpath>
-                        <xpath expr="//button[@id='draft_confirm']" position="replace">
+                <xpath expr="//button[@id='draft_confirm']" position="replace">
                     <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" invisible="1"/>
                 </xpath>
                 <xpath expr="//button[@name='button_cancel']" position="replace" groups="docproject.docproject_hod">

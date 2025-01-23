@@ -6,7 +6,7 @@
     "description": "Virunga Alliance",
     "author": "Virunga Foundation",
     "license": "OPL-1",
-    "depends": ["base", "project", "purchase", "hr"],
+    "depends": ["base", "project", "hr"],
     "application": False,
     "data": [
         # Security
@@ -14,10 +14,10 @@
         "security/ir.model.access.csv",
         # "security/ir_rules.xml",
         # Views
-        "views/av_project_views.xml",
+        "views/project_views.xml",
         # Data
         # menu
-        "views/av_project_menu.xml",
+        "views/project_menu.xml",
     ],
     "installable": True,
 }

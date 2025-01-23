@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-access_purchase_admin,access_puchase_admin,model_purchase_order,av_purchase.av_purchase_hod,1,1,1,1
-access_purchase_cp,access_purchase_cp,model_purchase_order,av_purchase.av_purchase_cp,1,1,1,1
-access_purchase_users,access_purchase_users,model_purchase_order,base.group_user,0,0,0,0
+access_purchase_order_admin,access_puchase_order_admin,model_purchase_order,av_purchase.av_purchase_hod,1,1,1,1
+access_purchase_order_cp,access_purchase_order_cp,model_purchase_order,av_purchase.av_purchase_cp,1,1,1,1
+access_purchase_order_users,access_purchase_order_users,model_purchase_order,base.group_user,0,0,0,0
