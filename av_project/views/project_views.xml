@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date_start']" position="after">
-                    <field name="amount"/>
-                    <field name="department_id"/>
+                    <field name="amount" readonly="state not in ( 'draft',)"/>
+                    <field name="department_id" readonly="state not in ( 'draft',)"/>
                     <field name="hod_id"/>
                     <field name="state" invisible="0"/>
                 </xpath>
