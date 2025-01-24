@@ -22,8 +22,11 @@
                 </xpath>
                 <xpath expr="//button[@name='%(project.project_share_wizard_action)d']" position="replace" >
                     <button name="action_stop_project" type="object" string="Stop" class="oe_highlight" invisible="state not in ('in_progress',)" />
+                    <button name="action_set_todraft" type="object" string="Set to draft" class="oe_highlight" invisible="state not in ('stopped',)" />
                 </xpath>
                 
+                
+            
                                  
             </field>
         </record>

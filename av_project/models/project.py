@@ -74,7 +74,7 @@ class Project(models.Model):
                     "You cannot stop a project that has not been started."
                 )
             project.state = "stopped"
-def action_set_todraft(self):
+    def action_set_todraft(self):
         """
         Action to set the start date to today and mark the project as in progress.
         """
