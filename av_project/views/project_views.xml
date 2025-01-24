@@ -12,7 +12,9 @@
                     <field name="hod_id"/>
                     <field name="state" invisible="0"/>
                 </xpath>
-              >
+                <xpath expr="//field[@name='date_start']" position="replace">
+                   <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}' required="date_start or date" readonly="state not in ( 'draft',)"/>
+                </xpath>
               
 
                 <xpath expr="//button[@name='%(project.project_share_wizard_action)d']" position="replace" >
@@ -21,10 +23,7 @@
                 <xpath expr="//button[@name='%(project.project_share_wizard_action)d']" position="replace" >
                     <button name="action_stop_project" type="object" string="Stop" class="oe_highlight" invisible="state not in ('in_progress',)" />
                 </xpath>
-                 <xpath expr="//button[@name='%(project.project_share_wizard_action)d']" position="after" >
-                    <button name="action_set_todraft" type="object" string="Set to draft" class="oe_highlight" invisible="state not in ('stopped',)" />
-                </xpath>
-            
+                
                                  
             </field>
         </record>
