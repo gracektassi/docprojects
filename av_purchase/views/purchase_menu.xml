@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Inherit and update the menu for the Purchases app -->
+        <record id="purchase.menu_purchase_root" model="ir.ui.menu">
+            <field name="name">AV Purchase</field>
+        </record>
+
+    </data>
+</odoo>
