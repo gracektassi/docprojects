@@ -6,12 +6,17 @@
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//header" position="inside">
-                    <button name="action_submit" type="object" string="Submit" class="oe_highlight" invisible="state != 'draft'" />
+                <xpath expr="//button[@name='print_quotation']" position="attributes">
+                    <attribute name="groups">av_purchase.av_purchase_hod</attribute>
+                </xpath>
+                <xpath expr="//button[@name='print_quotation']" position="after">
+                <field name="state" invisible="1"/>
+                <field name="project_id_readonly" invisible="1"/>
+                <button name="action_submit" type="object" string="Submit" class="oe_highlight" invisible="state!='draft'" groups="av_purchase.av_purchase_cp"  />  
                 </xpath>
                 <xpath expr="//div[@name='date_planned_div']" position="after">
-                    <field name="project_id"/>
-                    <field name="amount"/>
+                    <field name="project_id" readonly="project_id_readonly"  />  
+                    <field name="product_readonly" invisible="1"/>              
                 </xpath>
                 <!-- Locate the field and modify its behavior -->
                 <xpath expr="//field[@name='date_planned']" position="attributes">
@@ -19,18 +24,27 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <!-- Modify the visibility of the 'Send by Email' button -->
-                <xpath expr="//button[@id='bid_confirm']" position="replace">
-                    <button name="action_confirm" type="object" string="Confirm" groups="av_project.av_purchase_hod" class="oe_highlight" invisible="state !='waiting_for_hod'"/>
+                <xpath expr="//button[@id='bid_confirm']" position="attributes">
+                  <attribute name="groups">av_purchase.av_purchase_hod</attribute>
                 </xpath>
-                <xpath expr="//button[@id='draft_confirm']" position="replace">
-                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" invisible="1"/>
+                <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                 <attribute name="groups">av_purchase.av_purchase_hod</attribute>                 
                 </xpath>
-                <xpath expr="//button[@name='button_cancel']" position="replace" groups="av_project.av_purchase_hod">
-                   <button name="button_cancel" invisible="state not in ( 'to approve', 'sent', 'purchase','waiting_for_hod')"   string="Cancel" type="object" data-hotkey="x" />
+                <xpath expr="//button[@name='button_cancel']" position="attributes" groups="av_purchase.av_purchase_hod">
+                    <attribute name="groups">av_purchase.av_purchase_hod</attribute>
+                    <attribute name="name">button_cancel_action</attribute>
                 </xpath>
-
+                <!-- MODIFY THE PRODUCT ORDER LINE -->
+                
+                <xpath expr="//field[@name='order_line']" position="attributes">                  
+                    <attribute name="readonly">product_readonly</attribute>
+                </xpath>
                  
             </field>
         </record>
+
+
+        
+
     </data>
 </odoo>

@@ -35,11 +35,10 @@ class Project(models.Model):
     @api.depends("amount")
     def _compute_amount(self):
         for record in self:
-            if record.amount<0:
+            if record.amount < 0:
                 raise ValidationError(
                     "The department must have a manager to assign the Head of Department."
                 )
-
 
     @api.constrains("department_id")
     def _check_department_manager(self):
@@ -58,7 +57,9 @@ class Project(models.Model):
             if project.state == "in_progress":
                 raise ValidationError("The project is already in progress.")
             if not project.date_start:
-                raise ValidationError("Start date cannot be empty when the project is in progress.")
+                raise ValidationError(
+                    "Start date cannot be empty when the project is in progress."
+                )
 
             project.state = "in_progress"
 
@@ -74,6 +75,7 @@ class Project(models.Model):
                     "You cannot stop a project that has not been started."
                 )
             project.state = "stopped"
+
     def action_set_todraft(self):
         """
         Action to set the start date to today and mark the project as in progress.
@@ -83,6 +85,8 @@ class Project(models.Model):
             if project.state == "draft":
                 raise ValidationError("The project is already in daft.")
             if not project.date_start:
-                raise ValidationError("Start date cannot be empty when the project is in progress.")
+                raise ValidationError(
+                    "Start date cannot be empty when the project is in progress."
+                )
 
             project.state = "draft"
