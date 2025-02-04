@@ -10,8 +10,10 @@ class PurchaseOrder(models.Model):
     project_id = fields.Many2one("project.project", string="Assigned Project")
 
     department_id = fields.Many2one(
-        'hr.department', string="Department",
-        default=lambda self: self._get_current_department(), tracking=True,
+        "hr.department",
+        string="Department",
+        default=lambda self: self._get_current_department(),
+        tracking=True,
     )
     project_id_readonly = fields.Boolean(
         compute="_compute_project_id_readonly",
@@ -20,16 +22,19 @@ class PurchaseOrder(models.Model):
         compute="_compute_project_id_readonly",
     )
 
-
-
     def _get_current_department(self):
 
-        employee = self.env['hr.employee'].sudo().search([
-            ('user_id', '=', self.env.user.id),
-        ], limit=1)
-        return employee.department_id if employee else self.env['hr.department']
-
-
+        employee = (
+            self.env["hr.employee"]
+            .sudo()
+            .search(
+                [
+                    ("user_id", "=", self.env.user.id),
+                ],
+                limit=1,
+            )
+        )
+        return employee.department_id if employee else self.env["hr.department"]
 
     @api.constrains("amount")
     def _check_positive_amount(self):
@@ -41,7 +46,6 @@ class PurchaseOrder(models.Model):
                 raise ValidationError(
                     "The amount must be strictly positive. Please enter a valid amount."
                 )
-
 
     def button_cancel(self):
         # Call the parent method to execute its original functionality
@@ -76,26 +80,6 @@ class PurchaseOrder(models.Model):
                     "You must add at least one product to the order before submitting."
                 )
 
-            if order.state == "draft":
-                # Create To-Do for HOD
-                self.env["mail.activity"].create(
-                    {
-                        "activity_type_id": self.env.ref(
-                            "mail.mail_activity_data_todo"
-                        ).id,
-                        "res_model_id": self.env["ir.model"]
-                        .search([("model", "=", "purchase.order")], limit=1)
-                        .id,
-                        "res_id": order.id,
-                        "user_id": (
-                            order.department_id.manager_id.user_id.id
-                            if order.department_id.manager_id
-                            else False
-                        ),
-                        "note": "Please review and approve/reject the PO.",
-                    }
-                )
-
             if not order.project_id:
                 continue  # Skip if no project is linked
 
@@ -124,12 +108,32 @@ class PurchaseOrder(models.Model):
         Example: {'field_name1': value1, 'field_name2': value2}
         """
         for order in self:
-            if not order.order_line:
+            total_amount = sum(order.order_line.mapped("price_subtotal"))
+            if not order.order_line or total_amount<=0:
                 raise ValidationError(
-                    "You must add products to the order before submitting."
+                    "You must add products and some quantities to the order before submitting."
                 )
             # Write the new values to the record
             self.write({"state": "sent"})
+            
+        if order.state == "draft":
+            creator_department = self.create_uid.employee_id.department_id
+            # Create To-Do for HOD
+            self.env["mail.activity"].create(
+                {
+                    "activity_type_id": self.env.ref("mail.mail_activity_data_todo").id,
+                    "res_model_id": self.env["ir.model"]
+                    .search([("model", "=", "purchase.order")], limit=1)
+                    .id,
+                    "res_id": order.id,
+                    "user_id": (
+                        creator_department.manager_id.user_id.id
+                        if creator_department.manager_id
+                        else False
+                    ),
+                    "note": "Please review and approve/reject the PO.",
+                }
+            )
 
     def write(self, vals):
         # Track changes to state, trip_type and passengers
@@ -208,7 +212,7 @@ class PurchaseOrder(models.Model):
 
         has_hod = user.has_group("av_purchase.av_purchase_hod")
         # Check if the current user belongs to the 'av_purchase.av_purchase_hod' group
-        if is_hod and has_hod:
+        if (is_hod and has_hod) or self.state=='draft':
             # Execute the original button_cancel method as sudo
             # Write the new values to the record
             self.write({"state": "cancel"})

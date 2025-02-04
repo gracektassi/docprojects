@@ -30,7 +30,7 @@
                 <xpath expr="//button[@id='draft_confirm']" position="attributes">
                  <attribute name="groups">av_purchase.av_purchase_hod</attribute>                 
                 </xpath>
-                <xpath expr="//button[@name='button_cancel']" position="attributes" groups="av_purchase.av_purchase_hod">
+                <xpath expr="//button[@name='button_cancel']" position="attributes" >
                     <attribute name="groups">av_purchase.av_purchase_hod</attribute>
                     <attribute name="name">button_cancel_action</attribute>
                 </xpath>
