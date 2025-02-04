@@ -44,7 +44,28 @@
         </record>
 
 
-        
+          <record id="view_purchase_cancel_message_wizard" model="ir.ui.view">
+        <field name="name">purchase.cancel.message.wizard.form</field>
+        <field name="model">purchase.cancel.message.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancellation Message">
+                <group>
+                    <field name="message" placeholder="Enter your message..." />
+                </group>
+                <footer>
+                    <button name="action_confirm_message" type="object" string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_cancel_message_wizard" model="ir.actions.act_window">
+        <field name="name">Provide Cancellation Message</field>
+        <field name="res_model">purchase.cancel.message.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
     </data>
 </odoo>

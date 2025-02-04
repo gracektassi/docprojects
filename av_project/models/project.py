@@ -19,10 +19,23 @@ class Project(models.Model):
             ("stopped", "Stopped"),
         ],
         string="Status",
-        default="draft",
+        compute="_compute_status",
         readonly=True,
+        store=True,
         tracking=True,
     )
+
+    @api.depends('stage_id')  # Recompute when stage_id changes
+    def _compute_status(self):
+        for record in self:
+            if record.stage_id.name == 'To Do':
+                record.state = 'draft'
+            elif record.stage_id.name == 'In Progress':
+                record.state = 'in_progress'
+            elif record.stage_id.name == 'Done':
+                record.state = 'stopped'
+            else:
+                record.state = 'draft'  # Default value
 
     @api.depends("department_id")
     def _compute_hod(self):
@@ -54,27 +67,29 @@ class Project(models.Model):
         """
 
         for project in self:
-            if project.state == "in_progress":
+            if project.stage_id.name == "In Progress":
                 raise ValidationError("The project is already in progress.")
             if not project.date_start:
                 raise ValidationError(
                     "Start date cannot be empty when the project is in progress."
                 )
 
-            project.state = "in_progress"
+            project.stage_id.name = "In Progress"
+            project.state="in_progress"
 
     def action_stop_project(self):
         """
         Action to stop the project. Sets the stop date and updates the state to 'stopped'.
         """
         for project in self:
-            if project.state == "stopped":
+            if project.stage_id.name == "Done":
                 raise ValidationError("The project is already stopped.")
-            if project.state == "draft":
+            if project.stage_id.name == "To Do":
                 raise ValidationError(
                     "You cannot stop a project that has not been started."
                 )
-            project.state = "stopped"
+            project.stage_id.name = "Done"
+            project.state = 'stopped'
 
     def action_set_todraft(self):
         """
@@ -89,4 +104,5 @@ class Project(models.Model):
                     "Start date cannot be empty when the project is in progress."
                 )
 
-            project.state = "draft"
+            project.stage_id.name = "Canceled"
+            project.state="draft"

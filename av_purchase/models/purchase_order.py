@@ -7,7 +7,11 @@ from odoo.exceptions import ValidationError
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    project_id = fields.Many2one("project.project", string="Assigned Project")
+    project_id = fields.Many2one(
+        "project.project",
+        string="Assigned Project",
+        domain=lambda self: self._get_project_domain(),
+    )
 
     department_id = fields.Many2one(
         "hr.department",
@@ -21,6 +25,18 @@ class PurchaseOrder(models.Model):
     product_readonly = fields.Boolean(
         compute="_compute_project_id_readonly",
     )
+
+
+    def _get_project_domain(self):
+        """
+        Return a domain restricting projects to those from the departments
+        the user is assigned to.
+        """
+        user_departments = self.env["hr.employee"].sudo().search([
+            ("user_id", "=", self.env.user.id)
+        ]).mapped("department_id")
+
+        return [("department_id", "in", user_departments.ids)]
 
     def _get_current_department(self):
 
@@ -91,7 +107,7 @@ class PurchaseOrder(models.Model):
                     f"to cover this purchase order amount ({total_amount:.2f}). "
                     "Please adjust the budget or choose another project."
                 )
-            if order.project_id.state != "in_progress":
+            if order.project_id.stage_id.name != "In Progress":
                 raise ValidationError("Please start or resume this project first.")
 
             # Deduct the total amount from the project budget
@@ -198,7 +214,7 @@ class PurchaseOrder(models.Model):
                 (is_hod and has_hod and order.state == "sent") or order.state == "draft"
             )
 
-    def button_cancel_action(self):
+    def button_cancel_execute(self):
         user = self.env.user
         # Get the creator's department
         creator_department = self.create_uid.employee_id.department_id
@@ -220,3 +236,27 @@ class PurchaseOrder(models.Model):
         else:
             # Proceed with normal cancelation for non-HOD users
             return self.button_cancel()
+    def button_cancel_action(self):
+     """Opens wizard to ask for a message before cancellation"""
+     return {
+        "name": "Provide Cancellation Message",
+        "type": "ir.actions.act_window",
+        "res_model": "purchase.cancel.message.wizard",
+        "view_mode": "form",
+        "target": "new",
+        "context": {"active_id": self.id},
+    }
+class PurchaseCancelMessageWizard(models.TransientModel):
+    _name = "purchase.cancel.message.wizard"
+    _description = "Confirmation Message for RFQ Cancellation"
+
+    message = fields.Text(string="Message", required=True)
+
+    def action_confirm_message(self):
+        """Log message in chatter and close the wizard."""
+        active_id = self.env.context.get("active_id")
+        if active_id:
+            purchase_order = self.env["purchase.order"].browse(active_id)
+             # Now execute the cancellation logic
+            purchase_order.button_cancel_execute()  # Call the method directly
+            purchase_order.message_post(body=self.message)
