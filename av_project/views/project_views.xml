@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_project_form_inherit" model="ir.ui.view">
+            <field name="name">project.project.form.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_start']" position="after">
+                    <field name="amount" readonly="state not in ( 'draft',)"/>
+                    <field name="department_id" readonly="state not in ( 'draft',)"/>
+                    <field name="hod_id"/>
+                    <field name="state" invisible="0"/>
+                </xpath>
+                <xpath expr="//field[@name='date_start']" position="replace">
+                   <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}' required="date_start or date" readonly="state not in ( 'draft',)"/>
+                </xpath>
+              
+
+                <xpath expr="//button[@name='%(project.project_share_wizard_action)d']" position="replace" >
+                    <button name="action_start_project" type="object" string="Start" class="oe_highlight" invisible="state not in ( 'draft',) "/>
+                </xpath>
+                <xpath expr="//button[@name='%(project.project_share_wizard_action)d']" position="replace" >
+                    <button name="action_stop_project" type="object" string="Stop" class="oe_highlight" invisible="state not in ('in_progress',)" />
+                    <button name="action_set_todraft" type="object" string="Set to draft" class="oe_highlight" invisible="state not in ('stopped',)" />
+                </xpath>
+                
+                
+               <!-- Adding Purchase Orders Field -->
+                <xpath expr="//page[@name='settings']" position="before">
+                    <page string="PO">
+                        <field name="purchase_order_ids" readonly="True">
+                            <tree>
+                                <field name="name"/>
+                                <field name="date_order"/>
+                                <field name="partner_id"/>
+                                <field name="amount_total"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                                 
+            </field>
+        </record>
+    </data>
+</odoo>

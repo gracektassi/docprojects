@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='print_quotation']" position="attributes">
+                    <attribute name="groups">av_purchase.av_purchase_hod</attribute>
+                </xpath>
+                <xpath expr="//button[@name='print_quotation']" position="after">
+                <field name="state" invisible="1"/>
+                <field name="project_id_readonly" invisible="1"/>
+                <button name="action_submit" type="object" string="Submit" class="oe_highlight" invisible="state!='draft'" groups="av_purchase.av_purchase_cp"  />  
+                </xpath>
+                <xpath expr="//div[@name='date_planned_div']" position="after">
+                    <field name="project_id" readonly="project_id_readonly"  />  
+                    <field name="product_readonly" invisible="1"/>              
+                </xpath>
+                <!-- Locate the field and modify its behavior -->
+                <xpath expr="//field[@name='date_planned']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- Modify the visibility of the 'Send by Email' button -->
+                <xpath expr="//button[@id='bid_confirm']" position="attributes">
+                  <attribute name="groups">av_purchase.av_purchase_hod</attribute>
+                </xpath>
+                <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                 <attribute name="groups">av_purchase.av_purchase_hod</attribute>                 
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="attributes" >
+                    <attribute name="groups">av_purchase.av_purchase_hod</attribute>
+                    <attribute name="name">button_cancel_action</attribute>
+                </xpath>
+                <!-- MODIFY THE PRODUCT ORDER LINE -->
+                
+                <xpath expr="//field[@name='order_line']" position="attributes">                  
+                    <attribute name="readonly">product_readonly</attribute>
+                </xpath>
+                 
+            </field>
+        </record>
+
+
+          <record id="view_purchase_cancel_message_wizard" model="ir.ui.view">
+        <field name="name">purchase.cancel.message.wizard.form</field>
+        <field name="model">purchase.cancel.message.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancellation Message">
+                <group>
+                    <field name="message" placeholder="Enter your message..." />
+                </group>
+                <footer>
+                    <button name="action_confirm_message" type="object" string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_cancel_message_wizard" model="ir.actions.act_window">
+        <field name="name">Provide Cancellation Message</field>
+        <field name="res_model">purchase.cancel.message.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    </data>
+</odoo>

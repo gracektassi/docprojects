@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+   <!-- Modify the label of the Purchase category -->
+    <record id="module_category_av_purchase" model="ir.module.category">
+        <field name="name">AV Purchase</field>  <!-- New label for the category -->
+    </record>
+
+    <!--    This is the admin group-->
+    <record id="av_purchase_hod" model="res.groups">
+        <field name="name">HOD</field>
+        <field name="category_id" ref="module_category_av_purchase" />
+        <!-- implied_ids makes the new group inherit permissions from an existing group -->
+        <field name="comment">Approve P.O.</field>
+    </record>
+
+    <!--  Driver group  -->
+    <record id="av_purchase_cp" model="res.groups">
+        <field name="name">CP</field>
+        <field name="category_id" ref="module_category_av_purchase" />
+        <field name="comment">
+         Create Purchase Orders
+        </field>
+    </record>
+
+
+
+</odoo>
