@@ -12,6 +12,7 @@ class Project(models.Model):
     hod_id = fields.Many2one(
         "hr.employee", string="Head of Department", compute="_compute_hod", store=True
     )
+    purchase_order_ids = fields.One2many("purchase.order","project_id", string="Purchase Order")
     state = fields.Selection(
         [
             ("draft", "Draft"),

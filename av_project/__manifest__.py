@@ -6,7 +6,7 @@
     "description": "Virunga Alliance",
     "author": "Virunga Foundation",
     "license": "OPL-1",
-    "depends": ["base", "project", "hr"],
+    "depends": ["base", "project", "purchase","hr"],
     "application": False,
     "data": [
         # Security
